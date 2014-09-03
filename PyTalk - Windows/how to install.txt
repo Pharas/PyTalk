@@ -1,0 +1,17 @@
+1. Download Python 2.7 for Windows
+
+2. Download Pip for Python 2.7
+
+3. Download Install the Speech Recogniton Library by opening up cmd.exe Type in 'pip install SpeechRecognition' (without the quotes). Hit enter. If
+   the command doesn't work, then you did not install Pip correctly.
+
+4. Download the PyAudio Library from here: http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio
+   - Select 'PyAudio-0.2.8.win32-py2.7.exe' from the list. Download and run the .exe
+
+5. Open up main.py (Edit with IDLE) in the same directory as this readme.
+
+6. Go to Run, Run Module (or just hit F5)
+
+7. Start talking into the Microphone. When you want to finish, say "Goodbye"
+
+8. Enjoy!
