@@ -15,3 +15,5 @@
 7. Start talking into the Microphone. When you want to finish, say "Goodbye"
 
 8. Enjoy!
+
+NOTE. The dependencies are now included in this directory. The program should now run successfully without the need to manually install the libraries.

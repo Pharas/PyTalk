@@ -1,8 +1,9 @@
 import time, sys
 import io
+import sr
 
 # NOTE: this requires PyAudio because it uses the Microphone class
-import speech_recognition as sr
+
 r = sr.Recognizer()
 sentences = []
 playing = True
