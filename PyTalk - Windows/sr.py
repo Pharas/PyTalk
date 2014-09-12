@@ -27,7 +27,6 @@ class AudioSource(object):
 
 try:
     import pyaudio
-    print("Import pyaudio: success!")
     class Microphone(AudioSource):
         def __init__(self, device_index = None):
             self.device_index = device_index
