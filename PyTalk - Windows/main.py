@@ -4,24 +4,6 @@ import sr
 import string
 import my_bot
 
-#try:
-#    import willie
-#    print("Import Willie IRC Bot success!")
-#    try:
-#        import module
-#        print("Import module success!")
-#    except:
-#        print("Import module failed!")
-#        pass
-#    try:
-#        import bot
-#        print("Import bot success!")
-#    except:
-#        print("Import bot failed!")
-#except:
-#    print("Import Willie IRC Bot failed!")
-#    pass
-
 # NOTE: this requires PyAudio because it uses the Microphone class
 
 r = sr.Recognizer()
@@ -41,7 +23,6 @@ for c in time.asctime():
         start_time += str(c)
     
 def Go():
-    print("GO!")
     global playing
     if playing == True:
         with sr.Microphone() as source:                # use the default microphone as the audio source

@@ -6,12 +6,11 @@ import re
 class Bot():
     # Change into values that suit you.
 
-    #TODO - ASSIGN THESE VALUES BASED ON USER INPUT
     NETWORK = 'chat.freenode.net'
     PORT = 6667
     nick = 'pytalk-bot'
     channel = '##pytalk-test'
-    owner = 'mtubinis'
+    owner = ''
 
     def __init__(self):
         self.quit_bot = False
@@ -19,7 +18,23 @@ class Bot():
         self.data_buffer = ''  # no data received yet.
         self.rexp_general = re.compile(r'^(:[^ ]+)?[ ]*([^ ]+)[ ]+([^ ].*)?$')
 
+
     def connect_to_server(self):
+        print "Enter the irc server you want to join (chat.freenode.net by default, just press enter to use that server): "
+        server_name = str(raw_input())
+        if server_name != "":
+            self.NETWORK = server_name
+            
+
+        print "Enter your irc bot nickname: "
+        self.nick = str(raw_input())
+        print "Enter the irc channel you would like to join (##pytalk-test by default, just press enter to use that channel): "
+        channel_name = str(raw_input())
+        if channel_name != "":
+            self.channel = channel_name
+        print "Enter the irc username (in channel) that owns this bot: "
+        self.owner = str(raw_input())
+
         self.irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.irc.connect((self.NETWORK, self.PORT))
         self.irc.send('NICK ' + self.nick + '\r\n')
