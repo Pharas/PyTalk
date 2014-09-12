@@ -1,6 +1,26 @@
 import time, sys
 import io
 import sr
+import string
+import my_bot
+
+#try:
+#    import willie
+#    print("Import Willie IRC Bot success!")
+#    try:
+#        import module
+#        print("Import module success!")
+#    except:
+#        print("Import module failed!")
+#        pass
+#    try:
+#        import bot
+#        print("Import bot success!")
+#    except:
+#        print("Import bot failed!")
+#except:
+#    print("Import Willie IRC Bot failed!")
+#    pass
 
 # NOTE: this requires PyAudio because it uses the Microphone class
 
@@ -9,6 +29,11 @@ sentences = []
 playing = True
 
 start_time = ""
+
+IRC_BOT = my_bot.Bot()
+IRC_BOT.connect_to_server()
+IRC_BOT.say_hello()
+
 for c in time.asctime():
     if c == ':':
         start_time += "."
@@ -16,11 +41,11 @@ for c in time.asctime():
         start_time += str(c)
     
 def Go():
+    print("GO!")
     global playing
     if playing == True:
         with sr.Microphone() as source:                # use the default microphone as the audio source
             audio = r.listen(source)                   # listen for the first phrase and extract it into audio data
-
         try:
             #just some basic timestamp recording. eliminating day of week and year to make it look neater
             string_time = time.asctime()
@@ -39,6 +64,7 @@ def Go():
             ################################################################################################
                 
             print(r.recognize(audio))
+            IRC_BOT.say_message(r.recognize(audio))
             sentences.append(string_time + ": " + r.recognize(audio)+"\n\r")
             
             if r.recognize(audio) == "goodbye":
@@ -64,6 +90,7 @@ def Go():
                 print("Ending recording")
             Go()
         except LookupError:#audio is unreadable
+            print("Audio is unreadable")
             Go()
 
 
