@@ -9,9 +9,9 @@ Installing and Running
 1. Download Python 2.7 from http://www.python.org/download/releases/2.7/ if you do not already have it.
 
 2. The libraries used are:
-    - Speech Recognition 1.1.0. This library is included in the source. You can visit the library at       http://pypi.python.org/pypi/SpeechRecognition/
+Speech Recognition 1.1.0. This library is included in the source. You can visit the library at       http://pypi.python.org/pypi/SpeechRecognition/
 
-    - PyAudio. This library is also included in the source. You can visit the library at http://people.csail.mit.edu/hubert/pyaudio/.
+PyAudio. This library is also included in the source. You can visit the library at http://people.csail.mit.edu/hubert/pyaudio/.
 You can build this library on the pi by running:
 `sudo apt-get install python-pyaudio`
 
