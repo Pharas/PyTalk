@@ -14,6 +14,7 @@ Installing and Running
 
 -PyAudio. This library is also included in the source. You can visit the library at http://people.csail.mit.edu/hubert/pyaudio/.
 You can build this library on the pi by running:
+
 `sudo apt-get install python-pyaudio`
 
 3. A FLAC encoder is needed. Most distributions have a FLAC package, use the package manager to get FLAC. If not, try 
