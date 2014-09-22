@@ -15,8 +15,7 @@ The libraries used are:
   - PyAudio. This library is also included in the source. You can visit the library at http://people.csail.mit.edu/hubert/pyaudio/.
 You can build this library on the pi by running: `sudo apt-get install python-pyaudio`
 
-A FLAC encoder is needed. Most distributions have a FLAC package, use the package manager to get FLAC. If not, try 
-http://rpmfind.net/linux/rpm2html/search.php?query=flac or http://packages.debian.org/cgi-bin/search_packages.pl?keywords=flac&searchon=names&subword=1&version=all&release=all
+A FLAC encoder is needed. Most distributions have a FLAC package. If not, try http://rpmfind.net/linux/rpm2html/search.php?query=flac or [Debian FLAC](http://packages.debian.org/cgi-bin/search_packages.pl?keywords=flac&searchon=names&subword=1&version=all&release=all)
 
 Run main.py from the source code to use the program.
 
