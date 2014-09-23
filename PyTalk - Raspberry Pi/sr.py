@@ -158,26 +158,12 @@ class Recognizer(AudioSource):
         assert self.pause_threshold >= self.quiet_duration >= 0
         seconds_per_buffer = source.CHUNK / source.RATE
 
-        #
-        #
-        #IMPORTANT - had to modify library source code. There were divide by zero errors otherwise. The original source is the following lines:
-        #pause_buffer_count = math.ceil(self.pause_threshold / seconds_per_buffer) # number of buffers of quiet audio before the phrase is complete
-        #quiet_buffer_count = math.ceil(self.quiet_duration / seconds_per_buffer) # maximum number of buffers of quiet audio to retain before and after
-        #
-        #
-
-        #
-        #
-        #MODIFICATION BY: mtubinis
         if seconds_per_buffer != 0:
             pause_buffer_count = math.ceil(self.pause_threshold / seconds_per_buffer) # number of buffers of quiet audio before the phrase is complete
             quiet_buffer_count = math.ceil(self.quiet_duration / seconds_per_buffer) # maximum number of buffers of quiet audio to retain before and after
         else:
             pause_buffer_count = 0
             quiet_buffer_count = 0
-        #END MODIFICATION
-        #
-        #
         elapsed_time = 0
 
         # store audio input until the phrase starts
