@@ -15,10 +15,14 @@ The libraries used are:
   - PyAudio. This library is also included in the source. You can visit the library at http://people.csail.mit.edu/hubert/pyaudio/.
 You can build this library on the pi by running: `sudo apt-get install python-pyaudio`
 
-A FLAC encoder is needed. Most distributions have a FLAC package. If not, try [rpmfind.net](http://rpmfind.net/linux/rpm2html/search.php?query=flac) or [Debian FLAC](http://packages.debian.org/cgi-bin/search_packages.pl?keywords=flac&searchon=names&subword=1&version=all&release=all)
+A FLAC encoder is needed. Most distributions have a FLAC package. If not, download the flac package from your package manager. You can also try [rpmfind.net](http://rpmfind.net/linux/rpm2html/search.php?query=flac) or [Debian FLAC](http://packages.debian.org/cgi-bin/search_packages.pl?keywords=flac&searchon=names&subword=1&version=all&release=all)
 
 Run main.py from the source code to use the program.
 
-Quickstart
+Using the program
 --------
-To be filled in
+Once you run main.py, you will be asked for information on setting up the IRC bot for outputting audio to an IRC channel. The default channel is ##pytalk-test on freenode.
+
+After you input the IRC bot info, the program will start listening for audio. If the audio is unreadable, try speaking more clearly in the mic.
+
+If you say "goodbye" or when you exit the program, the program will terminate and create a log file that includes what was said and at what time.
