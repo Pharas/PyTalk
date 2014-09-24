@@ -1,82 +1,79 @@
-import time, sys
-import io
+import time, sys, io
 import sr
-import string
 import my_bot
 
-# NOTE: this requires PyAudio because it uses the Microphone class
+def MakeInitFileName(timeString):
+    startTime = ""
+    for c in timeString:
+        if c == ':':
+            startTime += "."
+        else:
+            startTime += str(c)
+    return startTime
+def EliminateWeekYear(timeString):
+    count = 0
+    for c in timeString:
+        if c == " ":
+            timeString = timeString[count+1:]
+            break
+        count += 1
+    count = 0
+    for c in reversed(timeString):
+        if c == " ":
+            timeString = timeString[:-count]
+            break
+        count += 1
+    return timeString
 
-r = sr.Recognizer()
-sentences = []
-playing = True
+class Program(object):
+    def __init__(self):
+        self.r = sr.Recognizer()
+        self.sentences = []
+        self.playing = True
+        self.start_time = MakeInitFileName(time.asctime())
 
-start_time = ""
-
-IRC_BOT = my_bot.Bot()
-IRC_BOT.connect_to_server()
-IRC_BOT.say_hello()
-
-for c in time.asctime():
-    if c == ':':
-        start_time += "."
-    else:
-        start_time += str(c)
-    
-def Go():
-    global playing
-    if playing == True:
-        with sr.Microphone() as source:                # use the default microphone as the audio source
-            audio = r.listen(source)                   # listen for the first phrase and extract it into audio data
-        try:
-            #just some basic timestamp recording. eliminating day of week and year to make it look neater
-            string_time = time.asctime()
-            count = 0
-            for c in string_time:
-                if c == " ":
-                    string_time = string_time[count+1:]
-                    break
-                count += 1
-            count = 0
-            for c in reversed(string_time):
-                if c == " ":
-                    string_time = string_time[:-count]
-                    break
-                count += 1
-            ################################################################################################
+        self.IRC_BOT = my_bot.Bot()
+        self.IRC_BOT.main()
+        
+    def ListenForSound(self):
+        if self.playing == True:
+            with sr.Microphone() as source:   # use the default microphone as the audio source
+                audio = self.r.listen(source) # listen for the first phrase and extract it into audio data
+            try:
+                print(self.r.recognize(audio))
+                self.IRC_BOT.say_message(self.r.recognize(audio))
+                self.sentences.append(EliminateWeekYear(time.asctime()) + ": " + self.r.recognize(audio)+"\n\r")
                 
-            print(r.recognize(audio))
-            IRC_BOT.say_message(r.recognize(audio))
-            sentences.append(string_time + ": " + r.recognize(audio)+"\n\r")
-            
-            if r.recognize(audio) == "goodbye":
-                playing = False
+                if self.r.recognize(audio) == "goodbye":
+                    self.playing = False
+                    self.WriteLogFile()
+                    
+                self.ListenForSound()
+            except LookupError:#audio is unreadable
+                print("Audio is unreadable")
+                self.ListenForSound()
 
-                ##write speech said to text file
-                global start_time
-                string_time = start_time
-                count1 = 0
-                for c in reversed(string_time):
-                    if c == " ":
-                        string_time = string_time[:-count1]
-                        break
-                    count1 += 1
+    def WriteLogFile(self):
+        print("Ending recording. Writing log file: " + self.start_time + ".txt")
+        self.IRC_BOT.say_message("Ending recording. Writing log file: " + self.start_time + ".txt")
+        
+        count = 0
+        for c in reversed(self.start_time):
+            if c == " ":
+                self.start_time = self.start_time[:-count]
+                break
+            count += 1        
+        file_object = open(self.start_time + ".txt", 'w')
+        for i in self.sentences:
+            file_object.write(i)
+        file_object.close()
+        
+    def main(self):
+        while True:
+            if self.playing == True:
+                self.ListenForSound()
+            else:
+                sys.exit(0)
 
-                
-                file_object = open(string_time + ".txt", 'w')
-                for i in sentences:
-                    file_object.write(i)
-                file_object.close()
-                ################################
-                
-                print("Ending recording")
-            Go()
-        except LookupError:#audio is unreadable
-            print("Audio is unreadable")
-            Go()
-
-
-while True:
-    if playing == True:
-        Go()
-    else:
-        sys.exit()
+program = Program()
+program.main()
