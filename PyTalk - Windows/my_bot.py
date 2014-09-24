@@ -1,39 +1,26 @@
-#!/usr/bin/env python
-
 import socket
-import re
 
-class Bot():
-    # Change into values that suit you.
-
-    NETWORK = 'chat.freenode.net'
-    PORT = 6667
-    nick = 'pytalk-bot'
-    channel = '##pytalk-test'
-    owner = ''
-
+class Bot(object):
     def __init__(self):
         self.quit_bot = False
-        self.command_list = []  # initialy we have not received any command.
-        self.data_buffer = ''  # no data received yet.
-        self.rexp_general = re.compile(r'^(:[^ ]+)?[ ]*([^ ]+)[ ]+([^ ].*)?$')
+        self.NETWORK = "chat.freenode.net"
+        self.PORT = 6667
+        self.nick = "pytalk-bot"
+        self.channel = "##pytalk-test"
+        self.owner = "No Owner"
 
-
+    def AwaitInput(self,text,origin):
+        print(text)
+        thing = str(raw_input())
+        if thing != "":
+            return thing
+        return origin
+        
     def connect_to_server(self):
-        print "Enter the irc server you want to join (chat.freenode.net by default, just press enter to use that server): "
-        server_name = str(raw_input())
-        if server_name != "":
-            self.NETWORK = server_name
-            
-
-        print "Enter your irc bot nickname: "
-        self.nick = str(raw_input())
-        print "Enter the irc channel you would like to join (##pytalk-test by default, just press enter to use that channel): "
-        channel_name = str(raw_input())
-        if channel_name != "":
-            self.channel = channel_name
-        print "Enter the irc username (in channel) that owns this bot: "
-        self.owner = str(raw_input())
+        self.NETWORK = self.AwaitInput("Enter the irc server you want to join (chat.freenode.net by default, just press enter to use that server): ",self.NETWORK)
+        self.nick = self.AwaitInput("Enter your irc bot nickname: ",self.nick)
+        self.channel = self.AwaitInput("Enter the irc channel you would like to join (##pytalk-test by default, just press enter to use that channel): ",self.channel)
+        self.owner = self.AwaitInput("Enter the irc username (in channel) that owns this bot: ",self.owner)
 
         self.irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.irc.connect((self.NETWORK, self.PORT))
@@ -42,78 +29,14 @@ class Bot():
         self.irc.send('JOIN ' + self.channel + '\r\n')
 
     def say_hello(self):
-        # Say hello!
         self.irc.send('PRIVMSG '+ self.channel +" :Hello, this is the PY-Talk IRC Bot!\n")
-    def say_message(self,message):
+        
+    def say_message(self, message):
         self.irc.send('PRIVMSG '+ self.channel +" :"+message+"\n")
-
-    def parse_command(self, data):
-        p = self.rexp_general
-        r = p.search(data)
-        if r is None:
-            # command does not match.
-            print "command does not match."
-            return
-
-        g = r.groups()
-        print g
-        sender = g[0]
-        cmd = g[1]
-        params = g[2]
-
-        if cmd == 'PING':
-            self.irc.send('PONG ' + params + '\r\n')
-            return
-        elif cmd == 'KICK':
-            self.irc.send('JOIN ' + self.channel + '\r\n')
-            return
-        elif cmd == 'PRIVMSG':
-            quit_rex = r'%s:[ ]+(quit|QUIT)' % self.nick
-            if re.search(quit_rex, params) is not None:
-                s_expr = 'PRIVMSG %s :OK, I am quitting now!\r\n' % self.owner
-                self.irc.send(s_expr)
-                self.irc.send('QUIT\r\n')
-                self.quit_bot = True
-                return
-            hi_rex = r'(hi|hello|hola)[ ]+%s' % self.nick
-            if re.search(hi_rex, params) is not None:
-                msg = 'Hi, I am a pythonic irc bot!\r\n'
-                self.irc.send('PRIVMSG %s :%s\r\n' % (self.channel, msg))
-                return
-
-    def get_command(self):
-
-        if len(self.command_list) > 0:
-            result = self.command_list.pop(0)
-            return result
-
-        # There is no command available, we read more bytes.
-        chunk = self.irc.recv(4096)
-        self.data_buffer = ''.join([self.data_buffer, chunk])
-
-        self.command_list = self.data_buffer.split('\r\n')
-        self.data_buffer = self.command_list.pop()
-        if len(self.command_list) == 0:
-            return None
-
-        result = self.command_list.pop(0)
-        return result
-
+        
     def main(self):
-
         self.connect_to_server()
         self.say_hello()
-
-        while True:
-
-            com = self.get_command()
-            while com is None:
-                com = self.get_command()
-            print "com: ", com
-
-            self.parse_command(com)
-            if self.quit_bot == True:
-                break
 
 if __name__ == '__main__':
     myBot = Bot()

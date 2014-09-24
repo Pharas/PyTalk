@@ -32,9 +32,9 @@ try:
             self.device_index = device_index
             self.format = pyaudio.paInt16 # 16-bit int sampling
             self.SAMPLE_WIDTH = pyaudio.get_sample_size(self.format)
-            self.RATE = 16000 # sampling rate in Hertz
+            self.RATE = 48000 # sampling rate in Hertz
             self.CHANNELS = 1 # mono audio
-            self.CHUNK = 1024 # number of frames stored in each buffer
+            self.CHUNK = 512 # number of frames stored in each buffer
 
             self.audio = None
             self.stream = None
