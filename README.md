@@ -25,4 +25,4 @@ Once you run main.py, you will be asked for information on setting up the IRC bo
 
 After you input the IRC bot info, the program will start listening for audio. If the audio is unreadable, try speaking more clearly in the mic.
 
-If you say "goodbye" or when you exit the program, the program will terminate and create a log file that includes what was said and at what time.
+If you say "goodbye", the program will terminate and create a log file that includes what was said and at what time.
