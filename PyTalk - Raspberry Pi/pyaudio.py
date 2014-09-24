@@ -98,8 +98,7 @@ import sys
 try:
     import _portaudio as pa
 except ImportError:
-    print "Please build and install the PortAudio Python " +\
-          "bindings first."
+    print "Please build and install the PortAudio Python bindings first."
     sys.exit(-1)
 
 
@@ -351,8 +350,7 @@ class Stream:
         # no stupidity allowed
         if not (input or output):
             raise ValueError, \
-                  "Must specify an input or output " +\
-                  "stream."
+                  "Must specify an input or output stream."
 
         # remember parent
         self._parent = PA_manager

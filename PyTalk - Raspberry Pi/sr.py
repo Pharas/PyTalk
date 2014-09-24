@@ -32,9 +32,9 @@ try:
             self.device_index = device_index
             self.format = pyaudio.paInt16 # 16-bit int sampling
             self.SAMPLE_WIDTH = pyaudio.get_sample_size(self.format)
-            self.RATE = 16000 # sampling rate in Hertz
+            self.RATE = 48000 # sampling rate in Hertz
             self.CHANNELS = 1 # mono audio
-            self.CHUNK = 1024 # number of frames stored in each buffer
+            self.CHUNK = 512 # number of frames stored in each buffer
 
             self.audio = None
             self.stream = None
@@ -158,26 +158,12 @@ class Recognizer(AudioSource):
         assert self.pause_threshold >= self.quiet_duration >= 0
         seconds_per_buffer = source.CHUNK / source.RATE
 
-        #
-        #
-        #IMPORTANT - had to modify library source code. There were divide by zero errors otherwise. The original source is the following lines:
-        #pause_buffer_count = math.ceil(self.pause_threshold / seconds_per_buffer) # number of buffers of quiet audio before the phrase is complete
-        #quiet_buffer_count = math.ceil(self.quiet_duration / seconds_per_buffer) # maximum number of buffers of quiet audio to retain before and after
-        #
-        #
-
-        #
-        #
-        #MODIFICATION BY: mtubinis
         if seconds_per_buffer != 0:
             pause_buffer_count = math.ceil(self.pause_threshold / seconds_per_buffer) # number of buffers of quiet audio before the phrase is complete
             quiet_buffer_count = math.ceil(self.quiet_duration / seconds_per_buffer) # maximum number of buffers of quiet audio to retain before and after
         else:
             pause_buffer_count = 0
             quiet_buffer_count = 0
-        #END MODIFICATION
-        #
-        #
         elapsed_time = 0
 
         # store audio input until the phrase starts
