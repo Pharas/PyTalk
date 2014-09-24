@@ -45,8 +45,8 @@ class Program(object):
                 self.sentences.append(EliminateWeekYear(time.asctime()) + ": " + self.r.recognize(audio)+"\n\r")
                 
                 if self.r.recognize(audio) == "goodbye":
-                    self.playing = False
                     self.WriteLogFile()
+                    self.playing = False
                     
                 self.ListenForSound()
             except LookupError:#audio is unreadable
@@ -54,9 +54,6 @@ class Program(object):
                 self.ListenForSound()
 
     def WriteLogFile(self):
-        print("Ending recording. Writing log file: " + self.start_time + ".txt")
-        self.IRC_BOT.say_message("Ending recording. Writing log file: " + self.start_time + ".txt")
-        
         count = 0
         for c in reversed(self.start_time):
             if c == " ":
@@ -67,6 +64,8 @@ class Program(object):
         for i in self.sentences:
             file_object.write(i)
         file_object.close()
+        print("Ending recording. Writing log file: " + self.start_time + ".txt")
+        self.IRC_BOT.say_message("Ending recording. Writing log file: " + self.start_time + ".txt")
         
     def main(self):
         while True:
