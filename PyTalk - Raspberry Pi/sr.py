@@ -32,7 +32,7 @@ try:
             self.device_index = device_index
             self.format = pyaudio.paInt16 # 16-bit int sampling
             self.SAMPLE_WIDTH = pyaudio.get_sample_size(self.format)
-            self.RATE = 48000 # sampling rate in Hertz
+            self.RATE = 44100 # sampling rate in Hertz
             self.CHANNELS = 1 # mono audio
             self.CHUNK = 512 # number of frames stored in each buffer
 
@@ -41,10 +41,9 @@ try:
 
         def __enter__(self):
             self.audio = pyaudio.PyAudio()
-            self.stream = self.audio.open(
-                input_device_index = self.device_index,
-                format = self.format, rate = self.RATE, channels = self.CHANNELS, frames_per_buffer = self.CHUNK,
-                input = True, # stream is an input stream
+            self.stream = self.audio.open(input_device_index = self.device_index,
+                                          format = self.format, rate = self.RATE, channels = self.CHANNELS, frames_per_buffer = self.CHUNK,
+                                          input = True, # stream is an input stream
             )
             return self
 
@@ -100,8 +99,8 @@ class Recognizer(AudioSource):
         self.key = key
         self.language = language
 
-        self.energy_threshold = 100 # minimum audio energy to consider for recording
-        self.pause_threshold = 0.8 # seconds of quiet time before a phrase is considered complete
+        self.energy_threshold = 200 # minimum audio energy to consider for recording
+        self.pause_threshold = 1.5 # seconds of quiet time before a phrase is considered complete
         self.quiet_duration = 0.5 # amount of quiet time to keep on both sides of the recording
 
     def samples_to_flac(self, source, frame_data):
@@ -140,10 +139,12 @@ class Recognizer(AudioSource):
         elapsed_time = 0
         while True: # loop for the total number of chunks needed
             elapsed_time += seconds_per_buffer
-            if duration and elapsed_time > duration: break
+            if duration and elapsed_time > duration:
+                break
 
             buffer = source.stream.read(source.CHUNK)
-            if len(buffer) == 0: break
+            if len(buffer) == 0:
+                break
             frames.write(buffer)
 
         frame_data = frames.getvalue()
@@ -173,7 +174,8 @@ class Recognizer(AudioSource):
                 raise TimeoutError("listening timed out")
 
             buffer = source.stream.read(source.CHUNK)
-            if len(buffer) == 0: break # reached end of the stream
+            if len(buffer) == 0:
+                break # reached end of the stream
             frames.append(buffer)
 
             # check if the audio input has stopped being quiet
@@ -188,7 +190,8 @@ class Recognizer(AudioSource):
         pause_count = 0
         while True:
             buffer = source.stream.read(source.CHUNK)
-            if len(buffer) == 0: break # reached end of the stream
+            if len(buffer) == 0:
+                break # reached end of the stream
             frames.append(buffer)
 
             # check if the audio input has gone quiet for longer than the pause threshold
@@ -253,22 +256,17 @@ class Recognizer(AudioSource):
 
 
 # helper functions
-
 def shutil_which(pgm):
-    """
-    python2 backport of python3's shutil.which()
-    """
+    #python2 backport of python3's shutil.which()
     path = os.getenv('PATH')
     for p in path.split(os.path.pathsep):
         p = os.path.join(p, pgm)
         if os.path.exists(p) and os.access(p, os.X_OK):
             return p
 
-
 if __name__ == "__main__":
     r = Recognizer()
     m = Microphone()
-
     while True:
         print("Say something!")
         with m as source:
